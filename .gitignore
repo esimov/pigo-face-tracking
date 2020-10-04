@@ -6,8 +6,5 @@
 pigo
 build
 packages
-wasm/lib.wasm
-wasm/js/wasm_exec.js
-!/testdata/*.png
-!/testdata/*.jpg
-!/examples/**/*.png
+lib.wasm
+js/wasm_exec.js
