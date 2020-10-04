@@ -1,0 +1,13 @@
+*.bmp
+*.png
+*.jpg
+*.jpeg
+*.json
+pigo
+build
+packages
+wasm/lib.wasm
+wasm/js/wasm_exec.js
+!/testdata/*.png
+!/testdata/*.jpg
+!/examples/**/*.png

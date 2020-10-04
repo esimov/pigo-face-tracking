@@ -1,39 +1,18 @@
+// +build js,wasm
+
 package main
 
-import (
-	"runtime"
-	"time"
-
-	"github.com/micmonay/keybd_event"
-)
+import "fmt"
 
 func main() {
-	kb, err := keybd_event.NewKeyBonding()
+	c := NewCanvas()
+	webcam, err := c.StartWebcam()
 	if err != nil {
-		panic(err)
+		c.Alert("Webcam not detected!")
+	} else {
+		err := webcam.Render()
+		if err != nil {
+			c.Alert(fmt.Sprint(err))
+		}
 	}
-
-	// For linux, it is very important to wait 2 seconds
-	if runtime.GOOS == "linux" {
-		time.Sleep(2 * time.Second)
-	}
-
-	// Select keys to be pressed
-	kb.SetKeys(keybd_event.VK_A, keybd_event.VK_B)
-
-	// Set shift to be pressed
-	kb.HasSHIFT(true)
-
-	// Press the selected keys
-	err = kb.Launching()
-	if err != nil {
-		panic(err)
-	}
-
-	// Or you can use Press and Release
-	kb.Press()
-	time.Sleep(10 * time.Millisecond)
-	kb.Release()
-
-	// Here, the program will generate "ABAB" as if they were pressed on the keyboard.
 }
