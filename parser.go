@@ -23,7 +23,7 @@ func NewDetector() *Detector {
 	return &d
 }
 
-// ParseCascade loads and parse the cascade file trough the
+// ParseCascade loads and parse the cascade file through the
 // Javascript `location.href` method supported by the `js/syscall` package.
 // In the end it will return the cascade file encoded into a byte array.
 func (d *Detector) ParseCascade(path string) ([]byte, error) {
