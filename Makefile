@@ -19,7 +19,7 @@ all: wasm serve
 wasm:
 	[ -d $(JSDIR) ] || mkdir -p $(JSDIR)
 	cp -f "$$(go env GOROOT)/misc/wasm/wasm_exec.js" ./js/
-	GOOS=js GOARCH=wasm go build -o lib.wasm main.go canvas.go detector.go parser.go
+	GOOS=js GOARCH=wasm go build -o lib.wasm main.go
 
 serve:
 	$(BROWSER) 'http://localhost:5000'
