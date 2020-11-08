@@ -1,15 +1,13 @@
-package detector
+package tracking
 
 import (
 	"syscall/js"
-
-	"github.com/esimov/pigo-face-tracking/conn"
 )
 
 // InitWebSocket initializes the websocket connection.
 func (c *Canvas) InitWebSocket() {
-	ws := conn.GetParams()
-	c.ws = js.Global().Get("WebSocket").New("ws://" + ws.Address + "/ws")
+	host := c.doc.Get("location").Get("host").String()
+	c.ws = js.Global().Get("WebSocket").New("ws://" + host + "/ws")
 	c.Log("Attempting websocket connection...")
 
 	openCallback := js.FuncOf(func(this js.Value, args []js.Value) interface{} {

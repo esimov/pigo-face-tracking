@@ -5,11 +5,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/esimov/pigo-face-tracking/detector"
+	"github.com/esimov/pigo-face-tracking/tracking"
 )
 
 func main() {
-	c := detector.NewCanvas()
+	c := tracking.NewCanvas()
 	webcam, err := c.StartWebcam()
 	if err != nil {
 		c.Alert("Webcam not detected!")

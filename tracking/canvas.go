@@ -1,4 +1,4 @@
-package detector
+package tracking
 
 import (
 	"fmt"
@@ -90,6 +90,11 @@ func (c *Canvas) Render() error {
 			pixels := c.rgbaToGrayscale(data)
 			res := det.DetectFaces(pixels, height, width)
 			c.drawDetection(res)
+
+			if len(res) > 0 {
+				detection := fmt.Sprintf("%d,%d", res[0][1], res[0][0])
+				c.Send(js.ValueOf(detection).String())
+			}
 		}()
 		return nil
 	})

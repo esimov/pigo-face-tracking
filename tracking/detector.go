@@ -1,4 +1,4 @@
-package detector
+package tracking
 
 import (
 	"errors"
@@ -136,7 +136,7 @@ func (d *Detector) DetectLandmarkPoints(leftEye, rightEye *pigo.Puploc) [][]int 
 }
 
 // clusterDetection runs Pigo face detector core methods
-// and returns a cluster with the detected faces coordinates.
+// and returns a cluster with the detected face coordinates.
 func (d *Detector) clusterDetection(pixels []uint8, width, height int) []pigo.Detection {
 	imgParams = &pigo.ImageParams{
 		Pixels: pixels,
