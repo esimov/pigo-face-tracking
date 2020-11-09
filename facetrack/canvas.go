@@ -1,4 +1,4 @@
-package tracking
+package facetrack
 
 import (
 	"fmt"
@@ -92,8 +92,13 @@ func (c *Canvas) Render() error {
 			c.drawDetection(res)
 
 			if len(res) > 0 {
-				detection := fmt.Sprintf("%d,%d", res[0][1], res[0][0])
-				c.Send(js.ValueOf(detection).String())
+				leftEye := det.DetectLeftPupil(res[0])
+				rightEye := det.DetectRightPupil(res[0])
+				if leftEye != nil && rightEye != nil {
+					nx, ny := det.GetNoseCoordinates(leftEye, rightEye)
+					detection := fmt.Sprintf("%d,%d", nx, ny)
+					c.Send(js.ValueOf(detection).String())
+				}
 			}
 		}()
 		return nil

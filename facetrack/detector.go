@@ -1,10 +1,13 @@
-package tracking
+package facetrack
 
 import (
 	"errors"
 
 	pigo "github.com/esimov/pigo/core"
 )
+
+// perturbFact represents the perturbation factor used for pupils/eyes localization
+const perturbFact = 63
 
 // FlpCascade holds the binary representation of the facial landmark points cascade files
 type FlpCascade struct {
@@ -17,6 +20,7 @@ var (
 	puplocCascade    []byte
 	faceClassifier   *pigo.Pigo
 	puplocClassifier *pigo.PuplocCascade
+	noseClassifier   *pigo.PuplocCascade
 	flpcs            map[string][]*FlpCascade
 	imgParams        *pigo.ImageParams
 	err              error
@@ -51,6 +55,14 @@ func (d *Detector) UnpackCascades() error {
 	if err != nil {
 		return errors.New("error unpacking the puploc cascade file")
 	}
+	nc, err := d.ParseCascade("/cascade/lps/lp93")
+	if err != nil {
+		return errors.New("error reading the nose cascade file")
+	}
+	noseClassifier, err = plc.UnpackCascade(nc)
+	if err != nil {
+		return errors.New("error unpacking the nose cascade file")
+	}
 	return nil
 }
 
@@ -72,7 +84,7 @@ func (d *Detector) DetectLeftPupil(results []int) *pigo.Puploc {
 		Row:      results[0] - int(0.085*float32(results[2])),
 		Col:      results[1] - int(0.185*float32(results[2])),
 		Scale:    float32(results[2]) * 0.4,
-		Perturbs: 63,
+		Perturbs: perturbFact,
 	}
 	leftEye := puplocClassifier.RunDetector(*puploc, *imgParams, 0.0, false)
 	if leftEye.Row > 0 && leftEye.Col > 0 {
@@ -87,7 +99,7 @@ func (d *Detector) DetectRightPupil(results []int) *pigo.Puploc {
 		Row:      results[0] - int(0.085*float32(results[2])),
 		Col:      results[1] + int(0.185*float32(results[2])),
 		Scale:    float32(results[2]) * 0.4,
-		Perturbs: 63,
+		Perturbs: perturbFact,
 	}
 	rightEye := puplocClassifier.RunDetector(*puploc, *imgParams, 0.0, false)
 	if rightEye.Row > 0 && rightEye.Col > 0 {
@@ -105,13 +117,13 @@ func (d *Detector) DetectLandmarkPoints(leftEye, rightEye *pigo.Puploc) [][]int 
 
 	for _, eye := range eyeCascades {
 		for _, flpc := range flpcs[eye] {
-			flp := flpc.FindLandmarkPoints(leftEye, rightEye, *imgParams, 63, false)
+			flp := flpc.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, false)
 			if flp.Row > 0 && flp.Col > 0 {
 				det[idx] = append(det[idx], flp.Col, flp.Row, int(flp.Scale))
 			}
 			idx++
 
-			flp = flpc.FindLandmarkPoints(leftEye, rightEye, *imgParams, 63, true)
+			flp = flpc.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, true)
 			if flp.Row > 0 && flp.Col > 0 {
 				det[idx] = append(det[idx], flp.Col, flp.Row, int(flp.Scale))
 			}
@@ -121,18 +133,25 @@ func (d *Detector) DetectLandmarkPoints(leftEye, rightEye *pigo.Puploc) [][]int 
 
 	for _, mouth := range mouthCascade {
 		for _, flpc := range flpcs[mouth] {
-			flp := flpc.FindLandmarkPoints(leftEye, rightEye, *imgParams, 63, false)
+			flp := flpc.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, false)
 			if flp.Row > 0 && flp.Col > 0 {
 				det[idx] = append(det[idx], flp.Col, flp.Row, int(flp.Scale))
 			}
 			idx++
 		}
 	}
-	flp := flpcs["lp84"][0].FindLandmarkPoints(leftEye, rightEye, *imgParams, 63, true)
+	flp := flpcs["lp84"][0].GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, true)
 	if flp.Row > 0 && flp.Col > 0 {
 		det[idx] = append(det[idx], flp.Col, flp.Row, int(flp.Scale))
 	}
 	return det
+}
+
+// GetNoseCoordinates retrieves the nose coordinates by using the LP93 cascase file.
+// We will use the nose as reference point because it provides the best accurate position of the head.
+func (d *Detector) GetNoseCoordinates(leftEye, rightEye *pigo.Puploc) (int, int) {
+	flp := noseClassifier.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, true)
+	return flp.Col, flp.Row
 }
 
 // clusterDetection runs Pigo face detector core methods

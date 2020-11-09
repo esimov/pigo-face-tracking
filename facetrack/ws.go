@@ -1,4 +1,4 @@
-package tracking
+package facetrack
 
 import (
 	"syscall/js"

@@ -1,6 +1,7 @@
 package conn
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -103,6 +104,7 @@ func run() {
 			if ok {
 				detections := strings.Split(det, ",")
 				keyboard.EmitKeyboardPress()
+				fmt.Println(detections)
 			}
 		}
 	}
