@@ -37,6 +37,8 @@ type Canvas struct {
 	ws js.Value
 }
 
+const dtThreshold = 15
+
 var det *Detector
 
 // NewCanvas creates and initializes the new Canvas element
@@ -96,8 +98,13 @@ func (c *Canvas) Render() error {
 				rightEye := det.DetectRightPupil(res[0])
 				if leftEye != nil && rightEye != nil {
 					nx, ny := det.GetNoseCoordinates(leftEye, rightEye)
-					detection := fmt.Sprintf("%d,%d", nx, ny)
-					c.Send(js.ValueOf(detection).String())
+					//detection := fmt.Sprintf("%d,%d", nx, ny)
+					c.ctx.Call("beginPath")
+
+					c.ctx.Call("rect", res[0][1]+nx/7, nx, 5, 5)
+					c.ctx.Call("stroke")
+					key := c.detectMovement(nx, ny, dtThreshold)
+					c.Send(js.ValueOf(key).String())
 				}
 			}
 		}()

@@ -7,7 +7,7 @@ import (
 	"github.com/micmonay/keybd_event"
 )
 
-func EmitKeyboardPress() {
+func EmitKeyboardPress(key int) {
 	kb, err := keybd_event.NewKeyBonding()
 	if err != nil {
 		panic(err)
@@ -19,10 +19,10 @@ func EmitKeyboardPress() {
 	}
 
 	// Select keys to be pressed
-	kb.SetKeys(keybd_event.VK_A, keybd_event.VK_B)
+	kb.SetKeys(key)
 
 	// Set shift to be pressed
-	kb.HasSHIFT(true)
+	kb.HasSHIFT(false)
 
 	// Press the selected keys
 	err = kb.Launching()
@@ -30,8 +30,6 @@ func EmitKeyboardPress() {
 		panic(err)
 	}
 
-	// Or you can use Press and Release
 	kb.Press()
-	time.Sleep(10 * time.Millisecond)
 	kb.Release()
 }

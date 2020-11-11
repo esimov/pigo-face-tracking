@@ -1,14 +1,13 @@
 package conn
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
-	"strings"
 
 	"github.com/esimov/pigo-face-tracking/keyboard"
 	"github.com/gorilla/websocket"
+	"github.com/micmonay/keybd_event"
 )
 
 // HttpParams http/websocket connection parameters
@@ -94,17 +93,30 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 
 // Listen on the opened websocket connection and recieve the detection results concurrently.
 func run() {
+	var keyPressed int
 	defer func() {
 		close(socketChan)
 	}()
 
 	for {
 		select {
-		case det, ok := <-socketChan:
+		case key, ok := <-socketChan:
 			if ok {
-				detections := strings.Split(det, ",")
-				keyboard.EmitKeyboardPress()
-				fmt.Println(detections)
+				switch key {
+				case "down":
+					keyPressed = keybd_event.VK_DOWN
+					break
+				case "up":
+					keyPressed = keybd_event.VK_UP
+					break
+				case "right":
+					keyPressed = keybd_event.VK_RIGHT
+					break
+				case "left":
+					keyPressed = keybd_event.VK_LEFT
+					break
+				}
+				keyboard.EmitKeyboardPress(keyPressed)
 			}
 		}
 	}
