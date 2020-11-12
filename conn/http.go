@@ -17,8 +17,22 @@ type HttpParams struct {
 	Root    string
 }
 
+// wsclient is a middleman between the websocket connection and the hub.
+type wsclient struct {
+	// The websocket connection.
+	conn *websocket.Conn
+
+	// Buffered channel of outbound messages.
+	send chan []byte
+}
+
 // socketChan is a channel used for sending the detection results through
 var socketChan = make(chan string)
+
+var (
+	kb keyboard.KeyBonding
+	ws *wsclient
+)
 
 // A server application calls the Upgrade method from an HTTP request handler to initiate a connection
 var upgrader = websocket.Upgrader{
@@ -33,11 +47,12 @@ func Init(p *HttpParams) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	go run()
 
 	log.Printf("serving %s as %s on %s", p.Root, p.Prefix, p.Address)
 	http.Handle(p.Prefix, http.StripPrefix(p.Prefix, http.FileServer(http.Dir(p.Root))))
 	http.HandleFunc("/ws", wsHandler)
+
+	go ws.run()
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Print(r.RemoteAddr + " " + r.Method + " " + r.URL.String())
@@ -51,29 +66,8 @@ func Init(p *HttpParams) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-}
 
-// readSocket listen for new messages being sent to the websocket
-func readSocket(conn *websocket.Conn) {
-	defer func() {
-		conn.Close()
-	}()
-
-	for {
-		messageType, msg, err := conn.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
-			}
-			return
-		}
-		socketChan <- string(msg)
-
-		if err := conn.WriteMessage(messageType, msg); err != nil {
-			log.Println(err)
-			return
-		}
-	}
+	kb = *keyboard.Init()
 }
 
 // wsHandler is the websocket connection handler
@@ -88,12 +82,36 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	go readSocket(conn)
+	ws = &wsclient{conn: conn}
+	go ws.readSocket()
 }
 
-// Listen on the opened websocket connection and recieve the detection results concurrently.
-func run() {
-	var keyPressed int
+// readSocket listen for new messages being sent to the websocket
+func (ws *wsclient) readSocket() {
+	defer func() {
+		ws.conn.Close()
+	}()
+
+	for {
+		messageType, msg, err := ws.conn.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				log.Printf("error: %v", err)
+			}
+			return
+		}
+		socketChan <- string(msg)
+
+		if err := ws.conn.WriteMessage(messageType, msg); err != nil {
+			log.Println(err)
+			return
+		}
+	}
+}
+
+// run listens on the opened websocket connection and recieve the detection results concurrently.
+func (ws *wsclient) run() {
+	var cmd int
 	defer func() {
 		close(socketChan)
 	}()
@@ -102,21 +120,28 @@ func run() {
 		select {
 		case key, ok := <-socketChan:
 			if ok {
+				// Check if the connection is open and the channel is not closed.
 				switch key {
 				case "down":
-					keyPressed = keybd_event.VK_DOWN
+					cmd = keybd_event.VK_DOWN
 					break
 				case "up":
-					keyPressed = keybd_event.VK_UP
+					cmd = keybd_event.VK_UP
 					break
 				case "right":
-					keyPressed = keybd_event.VK_RIGHT
+					cmd = keybd_event.VK_RIGHT
 					break
 				case "left":
-					keyPressed = keybd_event.VK_LEFT
+					cmd = keybd_event.VK_LEFT
 					break
 				}
-				keyboard.EmitKeyboardPress(keyPressed)
+				kb.TriggerKeypress(cmd)
+			} else {
+				// Release the key bindings.
+				kb.Release()
+				// The hub closed the channel.
+				ws.conn.WriteMessage(websocket.CloseMessage, []byte{})
+				return
 			}
 		}
 	}

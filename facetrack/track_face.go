@@ -1,7 +1,6 @@
 package facetrack
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -9,34 +8,33 @@ var (
 	pnx, pny, pt = 0, 0, time.Now()
 )
 
+// detectMovement capture the head movement and based on the velocity and direction
+// it will trigger the corresponding keystroke event.
 func (c *Canvas) detectMovement(nx, ny, th int) string {
-	var pressedKey string
+	var cmd string
 	ct := time.Now()
 	dt := ct.Sub(pt).Seconds()
 
 	dx, dy := nx-pnx, ny-pny
-	if time.Since(pt).Seconds()+0.4 > time.Since(ct).Seconds() {
-		if (abs(dx) > th || abs(dy) > th) && dt < 1 {
-			fmt.Println(dx, dy)
-			if dx > dy {
-				if dx > 0 {
-					pressedKey = "right"
-				} else {
-					pressedKey = "left"
-				}
+	//if time.Since(pt).Seconds()+0.4 > time.Since(ct).Seconds() {
+	if (abs(dx) > th || abs(dy) > th) && dt < 1 {
+		if abs(dx) > abs(dy) {
+			if dx < 0 {
+				cmd = "right"
 			} else {
-				if dy > 0 {
-					pressedKey = "down"
-				} else {
-					pressedKey = "up"
-				}
+				cmd = "left"
 			}
-			pt = time.Now()
+		} else {
+			if dy > 0 {
+				cmd = "down"
+			} else {
+				cmd = "up"
+			}
 		}
-		pnx, pny, pt = nx, ny, ct
 	}
-	//fmt.Println(dt)
-	return pressedKey
+	pnx, pny, pt = nx, ny, ct
+	//}
+	return cmd
 }
 
 func abs(x int) int {

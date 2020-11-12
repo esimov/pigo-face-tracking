@@ -151,7 +151,7 @@ func (d *Detector) DetectLandmarkPoints(leftEye, rightEye *pigo.Puploc) [][]int 
 // We will use the nose as reference point because it provides the best accurate position of the head.
 func (d *Detector) GetNoseCoordinates(leftEye, rightEye *pigo.Puploc) (int, int) {
 	flp := noseClassifier.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, true)
-	return flp.Row, flp.Col
+	return flp.Col, flp.Row
 }
 
 // clusterDetection runs Pigo face detector core methods

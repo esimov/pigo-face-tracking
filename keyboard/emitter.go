@@ -1,35 +1,41 @@
 package keyboard
 
 import (
-	"runtime"
-	"time"
-
 	"github.com/micmonay/keybd_event"
 )
 
-func EmitKeyboardPress(key int) {
+// KeyBonding
+type KeyBonding struct {
+	keybd_event.KeyBonding
+}
+
+// Init initialize a new keybonding event.
+func Init() *KeyBonding {
 	kb, err := keybd_event.NewKeyBonding()
 	if err != nil {
 		panic(err)
 	}
+	return &KeyBonding{kb}
+}
 
-	// For linux, it is very important to wait 2 seconds
-	if runtime.GOOS == "linux" {
-		time.Sleep(2 * time.Second)
-	}
-
-	// Select keys to be pressed
-	kb.SetKeys(key)
-
-	// Set shift to be pressed
-	kb.HasSHIFT(false)
+// TriggerKeypress triggers the key down event for a specific key.
+func (kb *KeyBonding) TriggerKeypress(key int) error {
+	// Add key to be pressed
+	kb.AddKey(key)
 
 	// Press the selected keys
-	err = kb.Launching()
+	err := kb.Launching()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	kb.Press()
 	kb.Release()
+
+	return nil
+}
+
+// Release releases all the registered key events and clears the current instance.
+func (kb *KeyBonding) Release() {
+	kb.Clear()
 }

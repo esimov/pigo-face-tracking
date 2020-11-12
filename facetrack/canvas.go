@@ -96,15 +96,21 @@ func (c *Canvas) Render() error {
 			if len(res) > 0 {
 				leftEye := det.DetectLeftPupil(res[0])
 				rightEye := det.DetectRightPupil(res[0])
+
 				if leftEye != nil && rightEye != nil {
 					nx, ny := det.GetNoseCoordinates(leftEye, rightEye)
-					//detection := fmt.Sprintf("%d,%d", nx, ny)
 					c.ctx.Call("beginPath")
+					c.ctx.Set("fillStyle", "rgb(0, 255, 0)")
 
-					c.ctx.Call("rect", res[0][1]+nx/7, nx, 5, 5)
-					c.ctx.Call("stroke")
+					c.ctx.Call("moveTo", nx, ny)
+					c.ctx.Call("arc", nx, ny, 4, 0, 2*math.Pi, false)
+					c.ctx.Call("fill")
+
 					key := c.detectMovement(nx, ny, dtThreshold)
-					c.Send(js.ValueOf(key).String())
+					if len(key) > 0 {
+						//fmt.Println("SEND:", key)
+						c.Send(js.ValueOf(key).String())
+					}
 				}
 			}
 		}()
