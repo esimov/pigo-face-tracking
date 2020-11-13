@@ -38,7 +38,7 @@ type Canvas struct {
 }
 
 // dtThreshold delta time threshold used on face movement detection.
-const dtThreshold = 15
+const dtThreshold = 25
 
 var det *Detector
 

@@ -4,8 +4,10 @@ import (
 	"time"
 )
 
+const idleTime = 0.3
+
 var (
-	pnx, pny, pt = 0, 0, time.Now()
+	pnx, pny, pt, lt = 0, 0, time.Now(), time.Now()
 )
 
 // detectMovement capture the head movement and based on the velocity and direction
@@ -16,24 +18,26 @@ func (c *Canvas) detectMovement(nx, ny, th int) string {
 	dt := ct.Sub(pt).Seconds()
 
 	dx, dy := nx-pnx, ny-pny
-	//if time.Since(pt).Seconds()+0.4 > time.Since(ct).Seconds() {
 	if (abs(dx) > th || abs(dy) > th) && dt < 1 {
-		if abs(dx) > abs(dy) {
-			if dx < 0 {
-				cmd = "right"
+		if (time.Since(lt).Seconds()) > idleTime {
+			if abs(dx) > abs(dy) {
+				if dx < 0 {
+					cmd = "right"
+				} else {
+					cmd = "left"
+				}
 			} else {
-				cmd = "left"
+				if dy > 0 {
+					cmd = "down"
+				} else {
+					cmd = "up"
+				}
 			}
-		} else {
-			if dy > 0 {
-				cmd = "down"
-			} else {
-				cmd = "up"
-			}
+			lt = time.Now()
 		}
 	}
 	pnx, pny, pt = nx, ny, ct
-	//}
+
 	return cmd
 }
 
