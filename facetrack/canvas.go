@@ -37,6 +37,7 @@ type Canvas struct {
 	ws js.Value
 }
 
+// dtThreshold delta time threshold used on face movement detection.
 const dtThreshold = 15
 
 var det *Detector
@@ -98,6 +99,8 @@ func (c *Canvas) Render() error {
 				rightEye := det.DetectRightPupil(res[0])
 
 				if leftEye != nil && rightEye != nil {
+					// Obtain the nose coordinate.
+					// This ladmark point gives much more accuracy in face movement tracking.
 					nx, ny := det.GetNoseCoordinates(leftEye, rightEye)
 					c.ctx.Call("beginPath")
 					c.ctx.Set("fillStyle", "rgb(0, 255, 0)")
@@ -108,7 +111,6 @@ func (c *Canvas) Render() error {
 
 					key := c.detectMovement(nx, ny, dtThreshold)
 					if len(key) > 0 {
-						//fmt.Println("SEND:", key)
 						c.Send(js.ValueOf(key).String())
 					}
 				}
@@ -139,7 +141,7 @@ func (c *Canvas) StartWebcam() (*Canvas, error) {
 
 	c.video = c.doc.Call("createElement", "video")
 
-	// If we don't do this, the stream will not be played.
+	// Start the webcam stream instantly.
 	c.video.Set("autoplay", 1)
 	c.video.Set("playsinline", 1) // important for iPhones
 
