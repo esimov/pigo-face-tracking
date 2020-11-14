@@ -4,14 +4,14 @@ import (
 	"time"
 )
 
-const idleTime = 0.3
+const idleTime = 0.35
 
 var (
-	pnx, pny, pt, lt = 0, 0, time.Now(), time.Now()
+	pnx, pny, pt, it = 0, 0, time.Now(), time.Now()
 )
 
-// detectMovement capture the head movement and based on the velocity and direction
-// it will trigger the corresponding keystroke event.
+// detectMovement: captures the head movement and based on its
+// velocity and direction it will trigger the corresponding keystroke event.
 func (c *Canvas) detectMovement(nx, ny, th int) string {
 	var cmd string
 	ct := time.Now()
@@ -19,7 +19,9 @@ func (c *Canvas) detectMovement(nx, ny, th int) string {
 
 	dx, dy := nx-pnx, ny-pny
 	if (abs(dx) > th || abs(dy) > th) && dt < 1 {
-		if (time.Since(lt).Seconds()) > idleTime {
+		// Trigger only one keystroke event in a certain time interval in case
+		// the velocity of the face movement is greather than the predefined thershold value.
+		if (time.Since(it).Seconds()) > idleTime {
 			if abs(dx) > abs(dy) {
 				if dx < 0 {
 					cmd = "right"
@@ -33,7 +35,7 @@ func (c *Canvas) detectMovement(nx, ny, th int) string {
 					cmd = "up"
 				}
 			}
-			lt = time.Now()
+			it = time.Now()
 		}
 	}
 	pnx, pny, pt = nx, ny, ct
@@ -41,6 +43,7 @@ func (c *Canvas) detectMovement(nx, ny, th int) string {
 	return cmd
 }
 
+// abs returns the absolute value of the variable.
 func abs(x int) int {
 	if x < 0 {
 		return -x

@@ -99,8 +99,7 @@ func (c *Canvas) Render() error {
 				rightEye := det.DetectRightPupil(res[0])
 
 				if leftEye != nil && rightEye != nil {
-					// Obtain the nose coordinate.
-					// This ladmark point gives much more accuracy in face movement tracking.
+					// Obtain the nose coordinate which gives a much more accuracy in face movement tracking.
 					nx, ny := det.GetNoseCoordinates(leftEye, rightEye)
 					c.ctx.Call("beginPath")
 					c.ctx.Set("fillStyle", "rgb(0, 255, 0)")
@@ -111,6 +110,7 @@ func (c *Canvas) Render() error {
 
 					key := c.detectMovement(nx, ny, dtThreshold)
 					if len(key) > 0 {
+						c.Log("Key pressed: ", key)
 						c.Send(js.ValueOf(key).String())
 					}
 				}
@@ -252,7 +252,7 @@ func (c *Canvas) drawDetection(dets [][]int) {
 	}
 }
 
-// detectKeyPress listen for the keypress event and retrieves the key code.
+// detectKeyPress listen for a keypress event and retrieves the key code.
 func (c *Canvas) detectKeyPress() {
 	keyEventHandler := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		keyCode := args[0].Get("key")

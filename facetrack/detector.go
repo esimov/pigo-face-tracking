@@ -31,7 +31,7 @@ var (
 	mouthCascade = []string{"lp93", "lp84", "lp82", "lp81"}
 )
 
-// UnpackCascades unpack all of used cascade files.
+// UnpackCascades unpack the cascade files.
 func (d *Detector) UnpackCascades() error {
 	p := pigo.NewPigo()
 	cascade, err = d.ParseCascade("/cascade/facefinder")
@@ -148,7 +148,7 @@ func (d *Detector) DetectLandmarkPoints(leftEye, rightEye *pigo.Puploc) [][]int 
 }
 
 // GetNoseCoordinates retrieves the nose coordinates by using the LP93 cascase file.
-// We will use the nose as reference point because it provides the best accurate position of the head.
+// We are using the nose as a reference point, because it provides the most accurate position of the head.
 func (d *Detector) GetNoseCoordinates(leftEye, rightEye *pigo.Puploc) (int, int) {
 	flp := noseClassifier.GetLandmarkPoint(leftEye, rightEye, *imgParams, perturbFact, true)
 	return flp.Col, flp.Row

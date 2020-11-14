@@ -40,7 +40,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// Init initializes the webserver and websocket connection
+// Init initializes the webserver and the websocket connection
 func Init(p *HttpParams) {
 	var err error
 	p.Root, err = filepath.Abs(p.Root)
@@ -70,7 +70,7 @@ func Init(p *HttpParams) {
 	kb = *keyboard.Init()
 }
 
-// wsHandler is the websocket connection handler
+// wsHandler: websocket connection handler
 func wsHandler(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
@@ -109,7 +109,8 @@ func (ws *wsclient) readSocket() {
 	}
 }
 
-// run listens on the opened websocket connection and recieve the detection results concurrently.
+// run listens on the opened websocket connection and retrieves
+// the detection results continously until the socket is closed.
 func (ws *wsclient) run() {
 	var cmd int
 	defer func() {
