@@ -1,0 +1,9 @@
+# github.com/esimov/pigo v1.4.3
+## explicit
+github.com/esimov/pigo/core
+# github.com/gorilla/websocket v1.4.2
+## explicit
+github.com/gorilla/websocket
+# github.com/micmonay/keybd_event v1.1.0
+## explicit
+github.com/micmonay/keybd_event
