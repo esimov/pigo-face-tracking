@@ -39,10 +39,12 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get install -y xdg-utils
+          sudo apt-get install w3m
+          xdg-settings set default-web-browser w3m.desktop
 
       - name: Run Makefile
         id: makefile
-        run: make all
+        run: make wasm
         continue-on-error: true
 
       - name: Check on failures
