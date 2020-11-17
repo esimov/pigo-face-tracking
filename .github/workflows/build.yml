@@ -41,5 +41,5 @@ jobs:
       - name: Test
         run: go test ./...
 
-      -name: Run
+      - name: Run Makefile
         run: make all
