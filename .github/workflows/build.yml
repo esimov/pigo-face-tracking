@@ -41,4 +41,10 @@ jobs:
           sudo apt-get install -y xdg-utils
 
       - name: Run Makefile
+        id: makefile
         run: make all
+        continue-on-error: true
+
+      - name: Check on failures
+        if: steps.makefile.outputs.status == 'failure'
+        run: exit 1
