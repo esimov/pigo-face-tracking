@@ -37,8 +37,8 @@ jobs:
 
       - name: Install Linux Dependencies
         if: matrix.os == 'ubuntu-latest'
-          run: |
-            apt-get install -y xdg-utils
+        run: |
+          apt-get install -y xdg-utils
 
       - name: Run Makefile
         run: make all
