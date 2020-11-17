@@ -23,7 +23,7 @@ wasm:
 
 serve:
 	$(BROWSER) 'http://localhost:5000'
-	go run server/main.go
+	GOARCH=amd64 go build -o pigo-face-tracking server/main.go && ./pigo-face-tracking
 
 clean:
 	rm -f *.wasm
