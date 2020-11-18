@@ -1,5 +1,7 @@
 # pigo-face-tracking
 
+[![CI](https://github.com/esimov/pigo-face-tracking/workflows/CI/badge.svg)](https://github.com/esimov/pigo-face-tracking/actions)
+
 This is a real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert the face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
 
 This is achieved due to the library high performance facial landmark points detection capabilities. It proved that out of the supported facial landmark points, the nose (**LP93**) gives the best reference.
