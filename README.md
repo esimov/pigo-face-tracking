@@ -6,6 +6,8 @@ This is a real time face tracking application using the [Pigo](https://github.co
 
 This is achieved due to the library high performance facial landmark points detection capabilities. It proved that out of the supported facial landmark points, the nose (**LP93**) gives the best reference.
 
+<p align="center"><img src="https://github.com/esimov/pigo-face-tracking/raw/master/capture.gif" alt="Screen capture"/></p>
+
 ## How does it work?
 
 The **Pigo** library is capable for high accuracy facial landmark points detection, but out of the existing **15** facial landmark points, it proves that the nose provides the best accuracy for face tracking, so this has been used to track the head movement. Once a head movement is detected a keyboard press event is triggered through the OS system events as you would press the key physically.
