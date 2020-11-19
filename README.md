@@ -1,6 +1,7 @@
 # pigo-face-tracking
 
 [![CI](https://github.com/esimov/pigo-face-tracking/workflows/CI/badge.svg)](https://github.com/esimov/pigo-face-tracking/actions)
+[![License](https://img.shields.io/github/license/esimov/pigo-face-tracking)](https://github.com/esimov/pigo-face-tracking/blob/master/LICENSE)
 
 This is a real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert the face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
 
@@ -49,4 +50,4 @@ The easy solution is executing with `sudo`. A worse way is by changing the execu
 
 Copyright © 2020 Endre Simo
 
-This software is distributed under the MIT license. See the [LICENSE](https://github.com/esimov/pigo-wasm-demos/blob/master/LICENSE) file for the full license text.
+This software is distributed under the MIT license. See the [LICENSE](https://github.com/esimov/pigo-face-tracking/blob/master/LICENSE) file for the full license text.
