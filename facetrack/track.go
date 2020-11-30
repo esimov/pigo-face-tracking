@@ -21,7 +21,7 @@ func (c *Canvas) detectMovement(nx, ny, th int) string {
 	if (abs(dx) > th || abs(dy) > th) && dt < 1 {
 		// Trigger only one keystroke event in a certain time interval in case
 		// the velocity of the face movement is greather than the predefined thershold value.
-		if (time.Since(it).Seconds()) > idleTime {
+		if time.Since(it).Seconds() > idleTime {
 			if abs(dx) > abs(dy) {
 				if dx < 0 {
 					cmd = "right"
