@@ -1,9 +1,9 @@
 package facetrack
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"syscall/js"
@@ -35,12 +35,12 @@ func (d *Detector) ParseCascade(path string) ([]byte, error) {
 	u.Path = path
 	u.RawQuery = fmt.Sprint(time.Now().UnixNano())
 
-	log.Println("loading cascade file: " + u.String())
 	resp, err := http.Get(u.String())
-	if err != nil {
-		return nil, err
+	if err != nil || resp.StatusCode != 200 {
+		return nil, errors.New(fmt.Sprintf("%v cascade file is missing", u.String()))
 	}
 	defer resp.Body.Close()
+
 	buffer, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
