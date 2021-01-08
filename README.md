@@ -3,15 +3,15 @@
 [![CI](https://github.com/esimov/pigo-face-tracking/workflows/CI/badge.svg)](https://github.com/esimov/pigo-face-tracking/actions)
 [![License](https://img.shields.io/github/license/esimov/pigo-face-tracking)](https://github.com/esimov/pigo-face-tracking/blob/master/LICENSE)
 
-This is a real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert the face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
+This is a real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
 
-This is achieved due to the library high performance facial landmark points detection capabilities. It proved that out of the supported facial landmark points, the nose (**LP93**) gives the best reference.
+This is achieved due to the library high performance facial landmark points detection capabilities.
 
 <p align="center"><img src="https://github.com/esimov/pigo-face-tracking/raw/master/capture.gif" alt="Screen capture"/></p>
 
 ## How does it work?
 
-The **Pigo** library is capable for high accuracy facial landmark points detection, but out of the existing **15** facial landmark points, it proves that the nose provides the best accuracy for face tracking, so this has been used to track the head movement. Once a head movement is detected a keyboard press event is triggered through the OS system events as you would press the key physically.
+The **Pigo** library is capable for high accuracy facial landmark points detection, but out of the existing **15** facial landmark points, it proves that the nose (**LP93**) landmark point provides the best accuracy for face tracking, so this has been used to track the head movement. Once a head movement is detected a keyboard press event is triggered through the OS system events as you would press the key physically.
 
 ## Install
 **Notice: at least Go 1.13 is required!**
