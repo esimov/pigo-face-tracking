@@ -40,7 +40,7 @@ In MacOS you must set the accessibility authorization for the terminal you are r
 
 ### Linux:
 On Linux the library used for triggering the keyboard events uses ***uinput***, which on the major distributions requires root permissions.
-The easy solution is executing with `sudo`. A worse way is by changing the executable's permissions by using `chmod`. For this reason you can run the accompanied `permission.sh` shell file.
+The easy solution is running the command with `sudo`. Another, but not recommended approach is to change the executable's permissions by using `chmod`. For this reason you can run the accompanied `permission.sh` shell file.
 
 ## Author
 
