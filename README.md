@@ -11,7 +11,7 @@ This is achieved due to the library high performance facial landmark points dete
 
 ## How does it work?
 
-The **Pigo** library is capable for high accuracy facial landmark points detection, but out of the existing **15** facial landmark points, it proves that the nose (**LP93**) landmark point provides the best accuracy for face tracking, so this has been used to track the head movement. Once a head movement is detected a keyboard press event is triggered through the OS system events as you would press the key physically.
+The **Pigo** library is capable of high accuracy facial landmark points detection, but out of the existing **15** facial landmark points the nose provides the best accuracy for face tracking, so this has been used to track the head movement. When a head movement is detected a keyboard press event is triggered through the OS system events as you would press the key physically.
 
 ## Install
 **Notice: at least Go 1.13 is required!**
@@ -24,9 +24,9 @@ $ go get -u -v github.com/esimov/pigo-face-tracking
 ## Run
 To run it is as simple as to type a single `make` command from the project root directory:
 
-1. This will open `localhost:5000` in a new tab, will activate the webcam and it will start tracking your head.
+1. This will instantiate a new web server listening on `localhost:5000`, will activate the webcam and start tracking your head.
 2. Find some Atari like online games and start playing. 
-3. Start moving your head <kbd>&uparrow;</kbd> and <kbd>&downarrow;</kbd>, <kbd>&leftarrow;</kbd> and <kbd>&rightarrow;</kbd> as you would press the arrow keys.
+3. Move your head as you would play with the arrow keys.
 
 ## OS Support
 **This program has been tested on Linux and MacOS, but normally it should also run on Windows.**
