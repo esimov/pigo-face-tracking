@@ -3,7 +3,7 @@
 [![CI](https://github.com/esimov/pigo-face-tracking/workflows/CI/badge.svg)](https://github.com/esimov/pigo-face-tracking/actions)
 [![License](https://img.shields.io/github/license/esimov/pigo-face-tracking)](https://github.com/esimov/pigo-face-tracking/blob/master/LICENSE)
 
-This is a real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
+Real time face tracking application using the [Pigo](https://github.com/esimov/pigo) face detection library to convert face movements into keyboard actions like <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd>. This means you can play games without being physically attached to a keyboard device or you can navigate through your web browser like you would navigate with the arrow keys. 
 
 This is achieved due to the library high performance facial landmark points detection capabilities.
 
@@ -24,7 +24,7 @@ $ go get -u -v github.com/esimov/pigo-face-tracking
 ## Run
 To run it is as simple as to type a single `make` command from the project root directory:
 
-1. This will instantiate a new web server listening on `localhost:5000`, will activate the webcam and start tracking your head.
+1. This will spawn a new web server listening on `localhost:5000`, will activate the webcam and start tracking your head.
 2. Find some Atari like online games and start playing. 
 3. Move your head as you would play with the arrow keys.
 
