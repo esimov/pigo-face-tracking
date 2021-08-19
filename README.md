@@ -24,8 +24,8 @@ $ go get -u -v github.com/esimov/pigo-face-tracking
 ## Run
 To run it is as simple as to type a single `make` command from the project root directory:
 
-1. This will spawn a new web server listening on `localhost:5000`, will activate the webcam and start tracking your head.
-2. Find some Atari like online games and start playing. 
+1. This will spawn a new web server listening on `localhost:5000`, will start the webcam and track your head movement continuously.
+2. Now find some Atari like online games and start playing. https://m.plonga.com/ is one of the options. 
 3. Move your head as you would play with the arrow keys.
 
 ## OS Support
