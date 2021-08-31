@@ -71,7 +71,9 @@ func NewCanvas() *Canvas {
 
 // Render calls the `requestAnimationFrame` Javascript function in asynchronous mode.
 func (c *Canvas) Render() error {
-	var data = make([]byte, c.windowSize.width*c.windowSize.height*4)
+	width, height := c.windowSize.width, c.windowSize.height
+	var data = make([]byte, width*height*4)
+
 	c.done = make(chan struct{})
 
 	err := det.UnpackCascades()
@@ -91,10 +93,16 @@ func (c *Canvas) Render() error {
 			uint8Arr := js.Global().Get("Uint8Array").New(rgba)
 			js.CopyBytesToGo(data, uint8Arr)
 			pixels := c.rgbaToGrayscale(data)
-			res := det.DetectFaces(pixels, height, width)
-			c.drawDetection(res)
 
+			// Resetore the slice to its default values to avoid unnecessary memory allocation.
+			// The GC won't clean up the memory address allocated by this slice otherwise
+			// and the memory will keep up increasing on each iteration.
+			data = make([]byte, len(data))
+
+			res := det.DetectFaces(pixels, height, width)
 			if len(res) > 0 {
+				c.drawDetection(res)
+
 				leftEye := det.DetectLeftPupil(res[0])
 				rightEye := det.DetectRightPupil(res[0])
 
