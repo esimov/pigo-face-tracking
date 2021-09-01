@@ -126,10 +126,12 @@ func (c *Canvas) Render() error {
 		}()
 		return nil
 	})
+	// Release renderer to free up resources.
+	defer c.renderer.Release()
+
 	c.window.Call("requestAnimationFrame", c.renderer)
 	c.detectKeyPress()
 	<-c.done
-
 	return nil
 }
 

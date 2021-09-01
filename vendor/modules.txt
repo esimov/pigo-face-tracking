@@ -1,4 +1,4 @@
-# github.com/esimov/pigo v1.4.3
+# github.com/esimov/pigo v1.4.4
 ## explicit
 github.com/esimov/pigo/core
 # github.com/gorilla/websocket v1.4.2
